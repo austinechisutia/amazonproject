@@ -1,6 +1,6 @@
 // named exports are used to export functions and variables
 // from this file to other files
-import { cart, removeFromCart } from "./cart.js";
+import { cart, removeFromCart, updateDeliveryOption } from "./cart.js";
 import { products } from "../data/products.js";
 import { formatMoney } from "./money.js";
 import { hello } from "https://unpkg.com/supersimpledev@1.0.1/hello.esm.js";
@@ -106,7 +106,10 @@ function deliveryOptionsHTML(matchingProduct, cartItem){
     const priceString = deliveryOption.priceCents === 0 ? "FREE Shipping" : `$${formatMoney(deliveryOption.priceCents)} -` ;
     const isChecked = deliveryOption.id === cartItem.deliveryOptionsId;
    html += `
-    <div class="delivery-option">
+    <div class="delivery-option js-delivery-option"
+      data-product-id="${matchingProduct.id}"
+      data-delivery-option-id="${deliveryOption.id}"
+      >
       <input type="radio" ${isChecked ? "checked" : ""}
         class="delivery-option-input"
         name="delivery-option-${matchingProduct.id}">
@@ -132,7 +135,18 @@ document.querySelectorAll(".js-delete-quantity-link").forEach((link)=>{
     const productId = event.target.dataset.productId;
     removeFromCart(productId);
 
-    document.querySelector(`.js-cart-item-container-${productId}`).remove();
+   document.querySelector(`.js-cart-item-container-${productId}`).remove();
 
-  })
+
+  }
+)
+
+})
+
+document.querySelectorAll(".js-delivery-option").forEach((element)=>{
+  element.addEventListener("click", ()=>{
+   const {productId, deliveryOptionId} = element.dataset;
+    updateDeliveryOption(productId, deliveryOptionId);
+  }
+  )
 })
