@@ -1,4 +1,4 @@
-import {formatMoney} from '../script/money.js';
+import {formatMoney} from '../../script/money.js';
 
 if(formatMoney(2095) === '$20.95') {
     console.log('test passed');
